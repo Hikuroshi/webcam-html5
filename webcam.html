@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mengakses Webcam dengan HTML5</title>
+</head>
+<body>
+    <div>
+        <video autoplay="true" id="video-webcam">
+            Browsermu tidak mendukung bang, upgrade dong!
+        </video>
+    </div>
+
+    <canvas id="canvas" width="640" height="480" style="border: 1px solid #000;"></canvas>
+
+    <button onclick="takeSnapshot()">Ambil Gambar</button>
+
+    <script type="text/javascript">
+        var video = document.querySelector("#video-webcam")
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || msGetUserMedia || navigator.oGetUserMedia
+
+        if(navigator.getUserMedia){
+            navigator.getUserMedia({video: true}, handleVideo, videoError)
+        }
+
+        function handleVideo(stream){
+            video.srcObject = stream
+        }
+
+        function videoError(e){
+            alert("Izinkan Menggunakan Webcam!")
+        }
+
+
+        function takeSnapshot(){
+            var img = document.createElement('img')
+            var context
+
+            var width = video.offsetWidth, height = video.offsetHeight
+
+            canvas = document.getElementById('canvas')
+            canvas.width = width
+            canvas.height = height
+
+            context = canvas.getContext("2d")
+            context.drawImage(video, 0, 0, width, height)
+
+            img.src = canvas.toDataUrl('image/png')
+            document.body.appendChild(img)
+        }
+    </script>
+</body>
+</html>
